@@ -37,16 +37,16 @@ def indicator3(n, m, x):
 
 # Подпрограмма нахождения максимальной парной сопряженности
 def indicator4(n, m, x):
-    X = fill_obs_matrix(n, m, x)        # Заполнение матрицы наблюдений X
+    X = fill_obs_matrix(n, m, x)        # Заполнение матрицы наблюдений
     X_t = np.transpose(X)               # Транспонирование X
     X_tX = np.matmul(X_t, X)            # Произведение матриц X_t и X
     R = np.zeros((m - 1, m - 1))        # Инициализация матрицы сопряженности
     max = 0.
-    for i in range(0, m - 1):           # Заполнение матрицы сопряженности
-        for j in range(0, m - 1):
-            R[i][j] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
-            if abs(R[i][j]) > max and i != j:
-                max = abs(R[i][j])
+    for i in range(1, m):           # Заполнение матрицы сопряженности
+        for j in range(1, m):
+            R[i-1][j-1] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
+            if abs(R[i-1][j-1]) > max and i != j:
+                max = abs(R[i-1][j-1])
 
     # Вывод на консоль матрицы R
     print(f"  \tx1\t\t\t\t\t\t\tx2\t\t\t\t\t\t\tx3\t\t\t\t\t\t\tx4\t\t\t\t\t\t\tx5\t\t\t\t\t\t\tx6\t\t\t\t\t\t\tx7")
@@ -67,12 +67,24 @@ def indicator5(n, m, x):
     X_t = np.transpose(X)               # Транспонирование X
     X_tX = np.matmul(X_t, X)            # Произведение матриц X_t и X
     R = np.zeros((m - 1, m - 1))        # Инициализация матрицы сопряженности
-    max = 0.
-    for i in range(0, m - 1):           # Заполнение матрицы сопряженности
-        for j in range(0, m - 1):
-            R[i][j] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
+
+    for i in range(1, m):           # Заполнение матрицы сопряженности
+        for j in range(1, m):
+            R[i-1][j-1] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
+
     R_1 = npl.inv(R)
 
+    # Вывод на консоль матрицы R
+    print(f"  \tx1\t\t\t\t\t\t\tx2\t\t\t\t\t\t\tx3\t\t\t\t\t\t\tx4\t\t\t\t\t\t\tx5\t\t\t\t\t\t\tx6\t\t\t\t\t\t\tx7")
+    print(f"x1\t{R_1[0][0]}\t\t\t\t\t\t\t{R_1[0][1]}\t\t{R_1[0][2]}\t\t{R_1[0][3]}\t\t{R_1[0][4]}\t\t{R_1[0][5]}\t\t{R_1[0][6]}")
+    print(f"x2\t{R_1[1][0]}\t\t{R_1[1][1]}\t\t\t\t\t\t\t{R_1[1][2]}\t\t{R_1[1][3]}\t\t{R_1[1][4]}\t\t{R_1[1][5]}\t\t{R_1[1][6]}")
+    print(f"x3\t{R_1[2][0]}\t\t{R_1[2][1]}\t\t{R_1[2][2]}\t\t\t\t\t\t\t{R_1[2][3]}\t\t{R_1[2][4]}\t\t{R_1[2][5]}\t\t{R_1[2][6]}")
+    print(f"x4\t{R_1[3][0]}\t\t{R_1[3][1]}\t\t{R_1[3][2]}\t\t{R_1[3][3]}\t\t\t\t\t\t\t{R_1[3][4]}\t\t{R_1[3][5]}\t\t{R_1[3][6]}")
+    print(f"x5\t{R_1[4][0]}\t\t{R_1[4][1]}\t\t{R_1[4][2]}\t\t{R_1[4][3]}\t\t{R_1[4][4]}\t\t\t\t\t\t\t{R_1[4][5]}\t\t\t{R_1[4][6]}")
+    print(f"x6\t{R_1[5][0]}\t\t{R_1[5][1]}\t\t{R_1[5][2]}\t\t{R_1[5][3]}\t\t{R_1[5][4]}\t\t\t{R_1[5][5]}\t\t\t\t\t\t\t{R_1[5][6]}")
+    print(f"x7\t{R_1[6][0]}\t\t{R_1[6][1]}\t\t{R_1[6][2]}\t\t{R_1[6][3]}\t\t{R_1[6][4]}\t\t\t{R_1[6][5]}\t\t\t{R_1[6][6]}")
+
+    max = 0.
     for i in range(0, m - 1):
         Ri_2 = 1 - 1 / R_1[i][i]
         Ri = abs(math.sqrt(Ri_2))

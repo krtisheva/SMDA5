@@ -7,7 +7,7 @@ from model import *
 
 # Подпрограмма генерации экспериментальных данных
 def data_gen():
-    n = 729                         # количество измерений
+    n = 1000                         # количество измерений
     m = 8                           # количество параметров модели со свободным членом
     etta = np.empty(n)              # массив значений незашумленного отклика
     y = np.empty(n)                 # массив значений зашумленного отклика
@@ -15,17 +15,16 @@ def data_gen():
     theta = [1, 1, 1, 1, 1, 1, 1, 1]     # истинные значения оцениваемых параметров
 
     # заполнение векторов etta, x1, x2
-    grid = list(range(-1, 2))
-    i = 0
-    for x1 in grid:
-        for x2 in grid:
-            for x3 in grid:
-                for x4 in grid:
-                    for x5 in grid:
-                        for x6 in grid:
-                            x[i] = [x1, x2, x3, x4, x5, x6, x4+x5+x6+random.normalvariate(0, 0.01)]
-                            etta[i] = model(x[i], theta)
-                            i += 1
+    for i in range(n):
+        x1 = random.uniform(-1, 1)
+        x2 = random.uniform(-1, 1)
+        x3 = random.uniform(-1, 1)
+        x4 = random.uniform(-1, 1)
+        x5 = random.uniform(-1, 1)
+        x6 = random.uniform(-1, 1)
+        x[i] = [x1, x2, x3, x4, x5, x6, x4+x5+x6+random.normalvariate(0, 0.01)]
+        etta[i] = model(x[i], theta)
+        i += 1
 
     avg = sum(etta) / n     # среднее значение незашумленного отклика
     # вычисление мощности сигнала

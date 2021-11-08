@@ -1,5 +1,6 @@
 from gen_data import *
 from multicollinearity import *
+from estimation import  *
 
 answer = input('Хотите сгенерировать новые данные? (y/n)\n')
 if answer == 'y':
@@ -32,3 +33,6 @@ print(f"Максимальная парная сопряженность = {max_
 print("Показатель мультиколлинеарности №5")
 max, num = indicator5(n, m, x)
 print(f"Максимальная сопряженность = {max} (i={num})\n")
+
+theta, l = ridge_estimation(n, m, x, y)
+plotting(n, m, x, y, theta, l)
