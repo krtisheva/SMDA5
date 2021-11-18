@@ -1,6 +1,5 @@
 from gen_data import *
-from multicollinearity import *
-from estimation import  *
+from estimation import *
 
 answer = input('Хотите сгенерировать новые данные? (y/n)\n')
 if answer == 'y':
@@ -16,8 +15,9 @@ print(f"Определитель информационной матрицы = {
 
 # Расчет второго показателя мультиколлинеарности
 print("Показатель мультиколлинеарности №2")
-l_min = indicator2(n, m, x)
-print(f"Минимальное собственное число информационной матрицы = {l_min}\n")
+l_min, v_min = indicator2(n, m, x)
+print(f"Минимальное собственное число информационной матрицы = {l_min}")
+print(f"Собственный вектор соответсвующий мин. собств. числу: {v_min}\n")
 
 # Расчет третьего показателя мультиколлинеарности
 print("Показатель мультиколлинеарности №3")
@@ -35,4 +35,24 @@ max, num = indicator5(n, m, x)
 print(f"Максимальная сопряженность = {max} (i={num})\n")
 
 theta, l = ridge_estimation(n, m, x, y)
-plotting(n, m, x, y, theta, l)
+plotting_RRS(n, m, x, y, theta, l)
+plotting_norm(theta, l)
+
+estims = {l[i]: theta[i] for i in range(len(l))}
+reg_param = float(input('Выберите параметр регуляции для получения оценки (>0 c шагом 0.00001):\n'))
+if reg_param >= 0:
+    print(f'Параметр регуляции = {reg_param}')
+    print(f'Ридж-оценка: {estims[reg_param]}')
+    rel_err = npl.norm(np.array([1, 1, 1, 1, 1, 1, 1, 1]) - estims[reg_param])
+    print(f'Норма разности: {rel_err}')
+    rss = get_rss(estims[reg_param], x, y, n, m)
+    print(f'Остаточная вариация: {rss}\n\n')
+
+theta_pca = pca(n, m, x, y)
+print(f'Оценка по методу главных компонент: {theta_pca}')
+rel_err = npl.norm(np.array([1, 1, 1, 1, 1, 1, 1, 1]) - theta_pca)
+print(f'Норма разности: {rel_err}')
+rss = get_rss(theta_pca, x, y, n, m)
+print(f'Остаточная вариация: {rss}\n\n')
+
+print('Success!')
