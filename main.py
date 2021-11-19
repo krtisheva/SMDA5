@@ -47,6 +47,7 @@ if reg_param >= 0:
     print(f'Норма разности: {rel_err}')
     rss = get_rss(estims[reg_param], x, y, n, m)
     print(f'Остаточная вариация: {rss}\n\n')
+    plotting_y(x, y, n, m, estims[reg_param])
 
 theta_pca = pca(n, m, x, y)
 print(f'Оценка по методу главных компонент: {theta_pca}')
@@ -54,5 +55,6 @@ rel_err = npl.norm(np.array([1, 1, 1, 1, 1, 1, 1, 1]) - theta_pca)
 print(f'Норма разности: {rel_err}')
 rss = get_rss(theta_pca, x, y, n, m)
 print(f'Остаточная вариация: {rss}\n\n')
+plotting_y(x, y, n, m, theta_pca)
 
 print('Success!')

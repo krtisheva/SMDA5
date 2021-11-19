@@ -22,7 +22,7 @@ def indicator2(n, m, x):
 
 
 def get_eigh_vector(m, l, l_min, v):
-    for i in range(m):
+    for i in range(m - 1):
         if l[i] == l_min:
             return v[:, i]
 
@@ -41,11 +41,11 @@ def indicator4(n, m, x):
     X_tX = x_tx(n, m, x)                    # Произведение матриц X_t и X
     R = np.zeros((m - 1, m - 1))            # Инициализация матрицы сопряженности
     max = 0.                                # Максимальная парная сопряженность
-    for i in range(1, m):                   # Заполнение матрицы сопряженности R
-        for j in range(1, m):
-            R[i-1][j-1] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
-            if abs(R[i-1][j-1]) > max and i != j:
-                max = abs(R[i-1][j-1])
+    for i in range(0, m - 1):                   # Заполнение матрицы сопряженности R
+        for j in range(0, m - 1):
+            R[i][j] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
+            if abs(R[i][j]) > max and i != j:
+                max = abs(R[i][j])
 
     print("Матрица R:")
     output_matrix(R)                        # Вывод на консоль матрицы R
@@ -57,9 +57,9 @@ def indicator5(n, m, x):
     X_tX = x_tx(n, m, x)                    # Произведение матриц X_t и X
     R = np.zeros((m - 1, m - 1))            # Инициализация матрицы сопряженности
 
-    for i in range(1, m):                   # Заполнение матрицы сопряженности
-        for j in range(1, m):
-            R[i-1][j-1] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
+    for i in range(0, m - 1):                   # Заполнение матрицы сопряженности
+        for j in range(0, m - 1):
+            R[i][j] = 1 - spp.distance.cosine(X_tX[i], X_tX[j])
 
     R_1 = npl.inv(R)                        # Нахождение матрицы, обратной к матрице сопряженности R
 
@@ -82,6 +82,18 @@ def indicator5(n, m, x):
 
 # Функция заполнения матрицы наблюдений X
 def fill_obs_matrix(n, m, x):
+    mat_x = np.zeros((n, m))  # x - матрица наблюдений
+    # В цикле от 0 до n вычисляем компоненты вектора f
+    # для каждого наблюдения и заносим в матрицу X, как
+    # новую строку, итого n строк по m элементов (n*m)
+    for i in range(0, n):
+        mat_x[i] = f(x[i])
+    mat_x = np.delete(mat_x, 0, 1)
+    return mat_x
+
+
+# Функция заполнения матрицы наблюдений X
+def fill_obs_matrix_LSM(n, m, x):
     mat_x = np.zeros((n, m))  # x - матрица наблюдений
     # В цикле от 0 до n вычисляем компоненты вектора f
     # для каждого наблюдения и заносим в матрицу X, как
