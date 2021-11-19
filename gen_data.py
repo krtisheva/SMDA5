@@ -1,13 +1,12 @@
 import random
 import math
-import matplotlib.pyplot as plt
 import numpy as np
 from model import *
 
 
 # Подпрограмма генерации экспериментальных данных
 def data_gen():
-    n = 1000                            # количество измерений
+    n = 250                             # количество измерений
     m = 8                               # количество параметров модели со свободным членом
     etta = np.empty(n)                  # массив значений незашумленного отклика
     y = np.empty(n)                     # массив значений зашумленного отклика
@@ -16,15 +15,14 @@ def data_gen():
 
     # заполнение векторов
     for i in range(n):
+        # Генерация случайной точки
         x1 = random.uniform(-1, 1)
         x2 = random.uniform(-1, 1)
         x3 = random.uniform(-1, 1)
         x4 = random.uniform(-1, 1)
         x5 = random.uniform(-1, 1)
         x6 = random.uniform(-1, 1)
-        # x7 = random.uniform(-1, 1)
         x[i] = [x1, x2, x3, x4, x5, x6, x4+x5+x6+random.normalvariate(0, 0.01)]
-        # x[i] = [x1, x2, x3, x4, x5, x6, x7]
         etta[i] = model(x[i], theta)
 
     avg = sum(etta) / n     # среднее значение незашумленного отклика

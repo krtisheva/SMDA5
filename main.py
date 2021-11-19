@@ -34,27 +34,30 @@ print("Показатель мультиколлинеарности №5")
 max, num = indicator5(n, m, x)
 print(f"Максимальная сопряженность = {max} (i={num})\n")
 
-theta, l = ridge_estimation(n, m, x, y)
-plotting_RRS(n, m, x, y, theta, l)
-plotting_norm(theta, l)
+# Ридж-оценивание
+theta, reg_params = ridge_estimation(n, m, x, y)
+plotting_rss(n, m, x, y, theta, reg_params)
+plotting_norm(theta, reg_params)
 
-estims = {l[i]: theta[i] for i in range(len(l))}
-reg_param = float(input('Выберите параметр регуляции для получения оценки (>0 c шагом 0.00001):\n'))
-if reg_param >= 0:
-    print(f'Параметр регуляции = {reg_param}')
-    print(f'Ридж-оценка: {estims[reg_param]}')
-    rel_err = npl.norm(np.array([1, 1, 1, 1, 1, 1, 1, 1]) - estims[reg_param])
+# Выбор параметра регуляции для оценивания
+estims = {reg_params[i]: theta[i] for i in range(len(reg_params))}
+reg_p = float(input('Выберите параметр регуляции для получения оценки (>0 c шагом 0.00001):\n'))
+if reg_p >= 0:
+    print(f'Параметр регуляции = {reg_p}')
+    print(f'Ридж-оценка: {estims[reg_p]}')
+    rel_err = npl.norm(np.array([1, 1, 1, 1, 1, 1, 1, 1]) - estims[reg_p])
     print(f'Норма разности: {rel_err}')
-    rss = get_rss(estims[reg_param], x, y, n, m)
+    rss = get_rss(estims[reg_p], x, y, n, m)
     print(f'Остаточная вариация: {rss}\n\n')
-    plotting_y(x, y, n, m, estims[reg_param])
+    plotting_y(x, y, n, m, estims[reg_p], 'Ридж-оценивание')
 
-theta_pca = pca(n, m, x, y)
+# Оценивание по методы главных компонент
+x_c = np.array(x)
+y_c = np.array(y)
+theta_pca = pca(n, m, x_c, y_c)
 print(f'Оценка по методу главных компонент: {theta_pca}')
 rel_err = npl.norm(np.array([1, 1, 1, 1, 1, 1, 1, 1]) - theta_pca)
 print(f'Норма разности: {rel_err}')
 rss = get_rss(theta_pca, x, y, n, m)
 print(f'Остаточная вариация: {rss}\n\n')
-plotting_y(x, y, n, m, theta_pca)
-
-print('Success!')
+plotting_y(x, y, n, m, theta_pca, 'Метод главных компонент')
